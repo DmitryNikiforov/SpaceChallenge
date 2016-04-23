@@ -1,15 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
+using Couchbase.Lite;
 using GeoJSON.Net.Feature;
-using GeoJSON.Net.Geometry;
 
 namespace OsmTest.Core.Services
 {
     public class CouchDbGeoObjectsService : IGeoObjectsService
     {
+        private readonly string _viewName;
+        private readonly Database _db = Manager.SharedInstance.GetDatabase("main");
+
+        public CouchDbGeoObjectsService(Uri serverUrl, string viewName)
+        {
+            _viewName = viewName;
+
+            //var replication = _db.CreatePullReplication(serverUrl);
+            //replication.Continuous = true;
+            //replication.Start();
+        }
+
         public FeatureCollection GetCloseUsers(Feature point, double radius)
         {
-           return new FeatureCollection(new List<Feature>() {new Feature(geometry: new Point(new GeographicPosition(-6.3423888, 30.392372)))}) ;
+            var res = new FeatureCollection();
+            using (var query = _db.GetView(_viewName).CreateQuery())
+            {
+                foreach (var entry in query.Run())
+                {
+                    res.Features.Add(entry.ValueAs<Feature>());
+                }
+            }
+
+            return res;
         }
     }
 }

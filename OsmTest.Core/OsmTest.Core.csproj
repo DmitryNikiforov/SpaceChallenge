@@ -37,6 +37,9 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
+    <Reference Include="Couchbase.Lite">
+      <HintPath>..\Libs\Couchbase.Lite.dll</HintPath>
+    </Reference>
     <Reference Include="GeoJSON.Net, Version=0.1.47.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\GeoJSON.Net.0.1.47\lib\portable-net40+sl5+wp80+win8+wpa81\GeoJSON.Net.dll</HintPath>
       <Private>True</Private>
