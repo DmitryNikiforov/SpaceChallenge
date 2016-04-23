@@ -1,0 +1,13 @@
+﻿<Properties StartupItem="OsmTest.Android\OsmTest.Android.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Android.4d00642a6017a04f" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="OsmTest.Core\MyClass.cs">
+    <Files>
+      <File FileName="OsmTest.Android\MainActivity.cs" Line="1" Column="1" />
+      <File FileName="OsmTest.Core\MyClass.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
