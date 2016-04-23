@@ -59,4 +59,7 @@
   <attr path="/api/package[@name='org.osmdroid.api']/interface[@name='IMapController']/method[@name='setCenter']/parameter[@name='p0']" name="name">centreOfMap</attr>
   <attr path="/api/package[@name='org.osmdroid.bonuspack.routing']/class[@name='RoadLink']" name="visibility">public</attr>
   <attr path="/api/package[@name='org.osmdroid.bonuspack.overlays']/class[@name='MapEventsOverlay']/method[@name='draw']" name="visibility">public</attr>
+  <attr path="/api/package[@name='org.osmdroid.bonuspack.cachemanager']/class[@name='CacheManager']/method[@name='loadTile']" name="visibility">public</attr>
+  <attr path="/api/package[@name='org.osmdroid.bonuspack.cachemanager']/class[@name='CacheManager']/method[@name='possibleTilesInArea']" name="visibility">public</attr>
+  <attr path="/api/package[@name='org.osmdroid.bonuspack.cachemanager']/class[@name='CacheManager']/method[@name='downloadAreaAsync']" name="visibility">public</attr>
 </metadata>

@@ -129,6 +129,8 @@
     <Compile Include="Router.cs" />
     <Compile Include="Services\ApiService.cs" />
     <Compile Include="Services\AzureService.cs" />
+    <Compile Include="Services\CustomLocationProvider.cs" />
+    <Compile Include="Views\BitmapOverlay.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="kempen-big.osm.pbf.contracted.mobile.routing" />

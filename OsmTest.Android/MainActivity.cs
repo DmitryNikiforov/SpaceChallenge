@@ -7,11 +7,13 @@ using Android.App;
 using Android.Content;
 using Android.Graphics;
 using Android.Graphics.Drawables;
+using Android.Locations;
 using Android.Widget;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Views;
 using GeoJSON.Net.Geometry;
+using Org.Osmdroid.Views.Overlay.Mylocation;
 using OsmDroid;
 using OsmTest.Android.Model;
 using OsmTest.Android.Services;
@@ -29,7 +31,7 @@ using OsmTest.Core.Services;
 
 namespace OsmTest.Android
 {
-	[Activity (Label = "OsmTest", MainLauncher = true, Icon = "@mipmap/icon", Theme = "@style/Theme.AppCompat")]
+	[Activity (Label = "OsmTest", MainLauncher = true, Icon = "@mipmap/icon", Theme = "@style/Theme.AppCompat.Light")]
 	public class MainActivity : ActionBarActivity
    {
       /// <summary>
@@ -41,7 +43,8 @@ namespace OsmTest.Android
 
 
       private CancellationTokenSource _cancellationTokenSource;
-	   private string css = @"
+	   CustomLocationProvider _provider = null;
+      private string css = @"
 node
 {
     color:#f00;
@@ -71,13 +74,13 @@ relation node, relation way, relation relation
       private IMapController _mapController;
       //private MapView _mapView;
 
-
+      GeoPoint _centreOfMap = new GeoPoint(-6.3423888, 30.392372);
       protected async override void OnCreate(Bundle bundle)
       {
          base.OnCreate(bundle);
          SetContentView(Resource.Layout.Main);
          _service = new ApiService();
-         StyleInterpreter interpreter = null;
+         //StyleInterpreter interpreter = null;
          try
          {
             bool isTile = true;
@@ -87,7 +90,11 @@ relation node, relation way, relation relation
                _mapView = FindViewById<MapView>(Resource.Id.mapview);
                _mapView.SetTileSource(TileSourceFactory.DefaultTileSource);
                _mapView.SetBuiltInZoomControls(true);
+               _mapView.SetUseDataConnection(false);
 
+               _provider = new CustomLocationProvider(this);
+               _provider.StartLocationProvider(new MyLocationNewOverlay(this, _mapView));
+               
                //List<OverlayItem> overlayItemArray = new List<OverlayItem>();
                //OverlayItem olItem = new OverlayItem("Here", "SampleDescription", new GeoPoint(34.878039, -10.650));
                //overlayItemArray.Add(olItem);
@@ -107,11 +114,19 @@ relation node, relation way, relation relation
                _mapController = _mapView.Controller;
                _mapController.SetZoom(25);
                
-               var centreOfMap = new GeoPoint(-6.3423888, 30.392372);
-               //var centreOfMap = new GeoPoint(34878039, -104650);
-               _mapController.SetCenter(centreOfMap);
+               _mapController.SetCenter(_centreOfMap);
 
-
+               try
+               {
+                  var db = Couchbase.Lite.Manager.SharedInstance.GetDatabase("space_herdsman");
+                  if (db != null)
+                  {
+                  }
+               }
+               catch (Exception e)
+               {
+                  
+               }
                IGeoObjectsService service = new CouchDbGeoObjectsService();
                var points = service.GetCloseUsers(null, 0);
                var firstPoint = ((GeoJSON.Net.Geometry.Point) points.Features[0].Geometry);
@@ -120,6 +135,8 @@ relation node, relation way, relation relation
                List<OverlayItem> overlayItemArray = new List<OverlayItem>();
                OverlayItem olItem = new OverlayItem("Here", "SampleDescription", new GeoPoint(x, y));
                overlayItemArray.Add(olItem);
+               
+
                olItem.SetMarker(Resources.GetDrawable(Resource.Drawable.cloud));
                ItemizedIconOverlay newPoints = new ItemizedIconOverlay(overlayItemArray, null, defaultResourceProxyImpl);
                _mapView.Overlays.Add(newPoints);
@@ -168,6 +185,12 @@ relation node, relation way, relation relation
          }
       }
 
+	   public void ChangeCenterPoint(Location location)
+	   {
+	      _centreOfMap = new GeoPoint(location);
+         _provider.StopLocationProvider();
+	   }
+
 	   protected async override void OnResume()
 	   {
 	      base.OnResume();
@@ -190,7 +213,7 @@ relation node, relation way, relation relation
          switch (item.ItemId)
          {
             case Resource.Id.atn_direct_enable:
-               UpdateFromService();
+               _mapController.SetCenter(_centreOfMap);
                return true;
             case Resource.Id.atn_direct_discover:
                return true;
