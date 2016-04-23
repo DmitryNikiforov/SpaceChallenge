@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
 using Android.Graphics;
+using Android.Graphics.Drawables;
 using Android.Widget;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Views;
+using GeoJSON.Net.Geometry;
 using OsmDroid;
 using OsmTest.Android.Model;
 using OsmTest.Android.Services;
@@ -22,6 +24,7 @@ using OsmDroid.Views;
 using OsmDroid.Views.Overlay;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.UI.Map.Styles;
+using OsmTest.Core.Services;
 
 
 namespace OsmTest.Android
@@ -85,23 +88,41 @@ relation node, relation way, relation relation
                _mapView.SetTileSource(TileSourceFactory.DefaultTileSource);
                _mapView.SetBuiltInZoomControls(true);
 
-               List<OverlayItem> overlayItemArray = new List<OverlayItem>();
-               OverlayItem olItem = new OverlayItem("Here", "SampleDescription", new GeoPoint(54.332, 48.389));
-               overlayItemArray.Add(olItem);
-               overlayItemArray.Add(new OverlayItem("Hi", "You're here", new GeoPoint(54.327, 48.389)));
+               //List<OverlayItem> overlayItemArray = new List<OverlayItem>();
+               //OverlayItem olItem = new OverlayItem("Here", "SampleDescription", new GeoPoint(34.878039, -10.650));
+               //overlayItemArray.Add(olItem);
+               //olItem.SetMarker(Resources.GetDrawable(Resource.Drawable.cloud));
+               //overlayItemArray.Add(new OverlayItem("Hi", "You're here", new GeoPoint(34.888039, -10.660)));
 
 
                DefaultResourceProxyImpl defaultResourceProxyImpl = new DefaultResourceProxyImpl(this);
-               ItemizedIconOverlay myItemizedIconOverlay = new ItemizedIconOverlay(overlayItemArray, null, defaultResourceProxyImpl);
-               _mapView.Overlays.Add(myItemizedIconOverlay);
+               //ItemizedIconOverlay myItemizedIconOverlay = new ItemizedIconOverlay(overlayItemArray, null, defaultResourceProxyImpl);
+               //_mapView.Overlays.Add(myItemizedIconOverlay);
+
+               //PathOverlay myPath = new PathOverlay(Color.Red, this);
+               //myPath.AddPoint(new GeoPoint(34.878039, -10.650));
+               //myPath.AddPoint(new GeoPoint(34.888039, -10.660));
+               //_mapView.Overlays.Add(myPath);
 
                _mapController = _mapView.Controller;
                _mapController.SetZoom(25);
                
-               var centreOfMap = new GeoPoint(54.327, 48.389);
+               var centreOfMap = new GeoPoint(-6.3423888, 30.392372);
                //var centreOfMap = new GeoPoint(34878039, -104650);
                _mapController.SetCenter(centreOfMap);
 
+
+               IGeoObjectsService service = new CouchDbGeoObjectsService();
+               var points = service.GetCloseUsers(null, 0);
+               var firstPoint = ((GeoJSON.Net.Geometry.Point) points.Features[0].Geometry);
+               double x = ((GeographicPosition) firstPoint.Coordinates).Latitude;
+               double y = ((GeographicPosition)firstPoint.Coordinates).Longitude;
+               List<OverlayItem> overlayItemArray = new List<OverlayItem>();
+               OverlayItem olItem = new OverlayItem("Here", "SampleDescription", new GeoPoint(x, y));
+               overlayItemArray.Add(olItem);
+               olItem.SetMarker(Resources.GetDrawable(Resource.Drawable.cloud));
+               ItemizedIconOverlay newPoints = new ItemizedIconOverlay(overlayItemArray, null, defaultResourceProxyImpl);
+               _mapView.Overlays.Add(newPoints);
             }
             else
             {
