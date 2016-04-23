@@ -30,11 +30,21 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Services\CouchDbGeoObjectsService.cs" />
+    <Compile Include="Services\IGeoObjectsService.cs" />
     <Compile Include="MyClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
   <ItemGroup>
+    <Reference Include="GeoJSON.Net, Version=0.1.47.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\GeoJSON.Net.0.1.47\lib\portable-net40+sl5+wp80+win8+wpa81\GeoJSON.Net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="protobuf-net">
       <HintPath>..\packages\protobuf-net.2.0.0.668\lib\portable-sl4+net40+wp7+windows8\protobuf-net.dll</HintPath>
     </Reference>
@@ -60,7 +70,5 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Services\" />
-  </ItemGroup>
+  <ItemGroup />
 </Project>
