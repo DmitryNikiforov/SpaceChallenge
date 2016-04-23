@@ -127,7 +127,7 @@ relation node, relation way, relation relation
                {
                   
                }
-               IGeoObjectsService service = new CouchDbGeoObjectsService();
+               IGeoObjectsService service = new CouchDbGeoObjectsService(new Uri(""), "ssd");
                var points = service.GetCloseUsers(null, 0);
                var firstPoint = ((GeoJSON.Net.Geometry.Point) points.Features[0].Geometry);
                double x = ((GeographicPosition) firstPoint.Coordinates).Latitude;
