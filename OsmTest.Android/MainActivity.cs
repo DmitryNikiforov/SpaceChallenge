@@ -86,18 +86,6 @@ relation node, relation way, relation relation
 
                // initialize map.
                var map = new Map();
-               string path = Environment.ExternalStorageDirectory + Java.IO.File.Separator + "default_css.mapcss";
-               Java.IO.File file = new Java.IO.File(path);
-               string content = "";
-               if (file.Exists())
-               {
-                  using (var streamReader = new StreamReader(path))
-                  {
-                     content = streamReader.ReadToEnd();
-                     System.Diagnostics.Debug.WriteLine(content);
-                  }
-               }
-               Stream csStream = Resources.OpenRawResource(Resource.Raw.default_css);
                interpreter = new MapCSSInterpreter(css);
 
                IDataSourceReadOnly source = new MemoryDataSource(osm.ToArray());
