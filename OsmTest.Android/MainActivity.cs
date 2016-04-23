@@ -5,27 +5,24 @@ using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.Widget;
 using Android.OS;
 using Android.Support.V7.App;
 using Android.Views;
-using OsmSharp.Android.UI;
-using OsmSharp.Android.UI.Data.SQLite;
-using OsmSharp.Math.Geo;
-using OsmSharp.Osm;
-using OsmSharp.Osm.API;
-using OsmSharp.Osm.Data;
-using OsmSharp.Osm.Data.Cache;
-using OsmSharp.Osm.Data.Memory;
-using OsmSharp.Osm.Xml.v0_6;
-using OsmSharp.UI;
-using OsmSharp.UI.Map;
-using OsmSharp.UI.Map.Layers;
-using OsmSharp.UI.Map.Styles;
-using OsmSharp.UI.Map.Styles.MapCSS;
+using OsmDroid;
 using OsmTest.Android.Model;
 using OsmTest.Android.Services;
 using Environment = Android.OS.Environment;
+
+using OsmDroid.Api;
+using OsmDroid.TileProvider.TileSource;
+using OsmDroid.Util;
+using OsmDroid.Views;
+using OsmDroid.Views.Overlay;
+using OsmSharp.Geo.Geometries;
+using OsmSharp.UI.Map.Styles;
+
 
 namespace OsmTest.Android
 {
@@ -44,7 +41,7 @@ namespace OsmTest.Android
 	   private string css = @"
 node
 {
-    color:#03f;
+    color:#f00;
     width:2;
     opacity:0.7;
     fill-color:#fc0;
@@ -68,48 +65,80 @@ relation node, relation way, relation relation
 {
     color:#d0f;
 }";
+      private IMapController _mapController;
+      //private MapView _mapView;
 
 
       protected async override void OnCreate(Bundle bundle)
       {
          base.OnCreate(bundle);
-         //SetContentView(Resource.Layout.Main);
+         SetContentView(Resource.Layout.Main);
          _service = new ApiService();
          StyleInterpreter interpreter = null;
          try
          {
+            bool isTile = true;
             //List<OsmGeo> osm = null;
-            List<OsmGeo> osm = await _service.DownloadArea(35.878039, -9.465, 36.833, -9.077);
-            if (osm != null)
+            if (isTile)
             {
-               Native.Initialize();
+               _mapView = FindViewById<MapView>(Resource.Id.mapview);
+               _mapView.SetTileSource(TileSourceFactory.DefaultTileSource);
+               _mapView.SetBuiltInZoomControls(true);
 
-               // initialize map.
-               var map = new Map();
-               interpreter = new MapCSSInterpreter(css);
+               List<OverlayItem> overlayItemArray = new List<OverlayItem>();
+               OverlayItem olItem = new OverlayItem("Here", "SampleDescription", new GeoPoint(54.332, 48.389));
+               overlayItemArray.Add(olItem);
+               overlayItemArray.Add(new OverlayItem("Hi", "You're here", new GeoPoint(54.327, 48.389)));
 
-               IDataSourceReadOnly source = new MemoryDataSource(osm.ToArray());
-               var t = map.AddLayerOsm(source, interpreter);
 
-               _mapView = new MapView(this, new MapViewSurface(this));
-               _mapView.Map = map;
-               _mapView.MapMaxZoomLevel = 30; // limit min/max zoom because MBTiles sample only contains a small portion of a map.
-               _mapView.MapMinZoomLevel = 1;
-               _mapView.MapTilt = 0;
-               _mapView.MapCenter = new GeoCoordinate(36, -9.2);
-               _mapView.MapZoom = 16;
-               _mapView.MapAllowTilt = false;
+               DefaultResourceProxyImpl defaultResourceProxyImpl = new DefaultResourceProxyImpl(this);
+               ItemizedIconOverlay myItemizedIconOverlay = new ItemizedIconOverlay(overlayItemArray, null, defaultResourceProxyImpl);
+               _mapView.Overlays.Add(myItemizedIconOverlay);
 
-               //OsmSharp.Data.SQLite.SQLiteConnectionBase sqLiteConnection = new SQLiteConnection("osmMap");
+               _mapController = _mapView.Controller;
+               _mapController.SetZoom(25);
+               
+               var centreOfMap = new GeoPoint(54.327, 48.389);
+               //var centreOfMap = new GeoPoint(34878039, -104650);
+               _mapController.SetCenter(centreOfMap);
 
-               Toast.MakeText(this, "Read success", ToastLength.Long).Show();
-               SetContentView(_mapView);
             }
             else
             {
-               Toast.MakeText(this, "OSM is null", ToastLength.Long).Show();
-               SetContentView(Resource.Layout.Main);
+               /*List<OsmGeo> osm = await _service.DownloadArea(34.878039, -10.465, 36, -9.077);
+               if (osm != null)
+               {
+                  Native.Initialize();
+
+                  // initialize map.
+                  var map = new Map();
+                  interpreter = new MapCSSInterpreter(css);
+
+                  IDataSourceReadOnly source = new MemoryDataSource(osm.ToArray());
+                  var layer = map.AddLayerOsm(source, interpreter);
+
+                  _mapView = new MapView(this, new MapViewSurface(this));
+                  _mapView.Map = map;
+                  _mapView.MapMaxZoomLevel = 17; // limit min/max zoom because MBTiles sample only contains a small portion of a map.
+                  _mapView.MapMinZoomLevel = 1;
+                  _mapView.MapTilt = 0;
+                  _mapView.MapCenter = new GeoCoordinate(-9.2, 36);
+                  _mapView.MapZoom = 2;
+                  _mapView.MapAllowTilt = false;
+
+                  //OsmSharp.Data.SQLite.SQLiteConnectionBase sqLiteConnection = new SQLiteConnection("osmMap");
+                 
+                  frame.AddView(_mapView);
+                  var textLabel = FindViewById<TextView>(Resource.Id.text_label);
+                  textLabel.Text = "Изображение подгрузилось";
+                  Toast.MakeText(this, "Read success", ToastLength.Long).Show();
+               }
+               else
+               {
+                  Toast.MakeText(this, "OSM is null", ToastLength.Long).Show();
+               }*/
             }
+            
          }
          catch (Exception exception)
          {

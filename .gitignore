@@ -1,2 +1,8 @@
 /packages
 /OsmTest.Android/kempen-big.osm.pbf.contracted.mobile.routing
+/OsmTest.Android/bin
+/OsmTest.Android/obj
+/OsmTest.Core/bin
+/OsmTest.Core/obj
+/OsmDroidBinding/bin
+/OsmDroidBinding/obj
