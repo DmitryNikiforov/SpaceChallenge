@@ -26,6 +26,8 @@ namespace OsmTest.Android
 		
 		public static void UpdateIdValues()
 		{
+			global::cbforestsharp.Droid.Resource.String.library_name = global::OsmTest.Android.Resource.String.library_name;
+			global::Couchbase.Lite.Android.Resource.String.library_name = global::OsmTest.Android.Resource.String.library_name;
 			global::ModernHttpClient.Resource.String.library_name = global::OsmTest.Android.Resource.String.library_name;
 			global::OsmSharp.Android.UI.Resource.String.library_name = global::OsmTest.Android.Resource.String.library_name;
 		}
@@ -1434,19 +1436,22 @@ namespace OsmTest.Android
 			public const int abc_textfield_search_material = 2130837577;
 			
 			// aapt resource value: 0x7f02004a
-			public const int ic_action_discover = 2130837578;
+			public const int cloud = 2130837578;
 			
 			// aapt resource value: 0x7f02004b
-			public const int ic_action_on_off = 2130837579;
+			public const int ic_action_discover = 2130837579;
 			
 			// aapt resource value: 0x7f02004c
-			public const int ic_launcher = 2130837580;
+			public const int ic_action_on_off = 2130837580;
 			
 			// aapt resource value: 0x7f02004d
-			public const int icon = 2130837581;
+			public const int ic_launcher = 2130837581;
 			
 			// aapt resource value: 0x7f02004e
-			public const int notification_template_icon_bg = 2130837582;
+			public const int icon = 2130837582;
+			
+			// aapt resource value: 0x7f02004f
+			public const int notification_template_icon_bg = 2130837583;
 			
 			static Drawable()
 			{
