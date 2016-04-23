@@ -127,6 +127,10 @@
     <Folder Include="Resources\drawable\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OsmDroidBinding\OsmDroidBinding.csproj">
+      <Project>{0d894556-5a79-48bd-a423-32be2cfae0ca}</Project>
+      <Name>OsmDroidBinding</Name>
+    </ProjectReference>
     <ProjectReference Include="..\OsmTest.Core\OsmTest.Core.csproj">
       <Project>{9b71c2f0-b78d-4533-ae9e-2eeeae8074d3}</Project>
       <Name>OsmTest.Core</Name>

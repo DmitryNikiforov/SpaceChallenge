@@ -1461,8 +1461,8 @@ namespace OsmTest.Android
 		public partial class Id
 		{
 			
-			// aapt resource value: 0x7f0d0050
-			public const int action0 = 2131558480;
+			// aapt resource value: 0x7f0d0052
+			public const int action0 = 2131558482;
 			
 			// aapt resource value: 0x7f0d0041
 			public const int action_bar = 2131558465;
@@ -1488,8 +1488,8 @@ namespace OsmTest.Android
 			// aapt resource value: 0x7f0d0042
 			public const int action_context_bar = 2131558466;
 			
-			// aapt resource value: 0x7f0d0054
-			public const int action_divider = 2131558484;
+			// aapt resource value: 0x7f0d0056
+			public const int action_divider = 2131558486;
 			
 			// aapt resource value: 0x7f0d0002
 			public const int action_menu_divider = 2131558402;
@@ -1515,11 +1515,11 @@ namespace OsmTest.Android
 			// aapt resource value: 0x7f0d001c
 			public const int always = 2131558428;
 			
-			// aapt resource value: 0x7f0d005e
-			public const int atn_direct_discover = 2131558494;
+			// aapt resource value: 0x7f0d0060
+			public const int atn_direct_discover = 2131558496;
 			
-			// aapt resource value: 0x7f0d005d
-			public const int atn_direct_enable = 2131558493;
+			// aapt resource value: 0x7f0d005f
+			public const int atn_direct_enable = 2131558495;
 			
 			// aapt resource value: 0x7f0d0019
 			public const int beginning = 2131558425;
@@ -1527,14 +1527,14 @@ namespace OsmTest.Android
 			// aapt resource value: 0x7f0d002b
 			public const int buttonPanel = 2131558443;
 			
-			// aapt resource value: 0x7f0d0051
-			public const int cancel_action = 2131558481;
+			// aapt resource value: 0x7f0d0053
+			public const int cancel_action = 2131558483;
 			
 			// aapt resource value: 0x7f0d0039
 			public const int checkbox = 2131558457;
 			
-			// aapt resource value: 0x7f0d0057
-			public const int chronometer = 2131558487;
+			// aapt resource value: 0x7f0d0059
+			public const int chronometer = 2131558489;
 			
 			// aapt resource value: 0x7f0d001d
 			public const int collapseActionView = 2131558429;
@@ -1563,8 +1563,8 @@ namespace OsmTest.Android
 			// aapt resource value: 0x7f0d001a
 			public const int end = 2131558426;
 			
-			// aapt resource value: 0x7f0d005c
-			public const int end_padder = 2131558492;
+			// aapt resource value: 0x7f0d005e
+			public const int end_padder = 2131558494;
 			
 			// aapt resource value: 0x7f0d0025
 			public const int expand_activities_button = 2131558437;
@@ -1587,14 +1587,14 @@ namespace OsmTest.Android
 			// aapt resource value: 0x7f0d0026
 			public const int image = 2131558438;
 			
+			// aapt resource value: 0x7f0d005d
+			public const int info = 2131558493;
+			
+			// aapt resource value: 0x7f0d0057
+			public const int line1 = 2131558487;
+			
 			// aapt resource value: 0x7f0d005b
-			public const int info = 2131558491;
-			
-			// aapt resource value: 0x7f0d0055
-			public const int line1 = 2131558485;
-			
-			// aapt resource value: 0x7f0d0059
-			public const int line3 = 2131558489;
+			public const int line3 = 2131558491;
 			
 			// aapt resource value: 0x7f0d0009
 			public const int listMode = 2131558409;
@@ -1602,8 +1602,11 @@ namespace OsmTest.Android
 			// aapt resource value: 0x7f0d0028
 			public const int list_item = 2131558440;
 			
-			// aapt resource value: 0x7f0d0053
-			public const int media_actions = 2131558483;
+			// aapt resource value: 0x7f0d0051
+			public const int mapview = 2131558481;
+			
+			// aapt resource value: 0x7f0d0055
+			public const int media_actions = 2131558485;
 			
 			// aapt resource value: 0x7f0d001b
 			public const int middle = 2131558427;
@@ -1704,8 +1707,8 @@ namespace OsmTest.Android
 			// aapt resource value: 0x7f0d0018
 			public const int src_over = 2131558424;
 			
-			// aapt resource value: 0x7f0d0052
-			public const int status_bar_latest_event_content = 2131558482;
+			// aapt resource value: 0x7f0d0054
+			public const int status_bar_latest_event_content = 2131558484;
 			
 			// aapt resource value: 0x7f0d004c
 			public const int submit_area = 2131558476;
@@ -1713,17 +1716,20 @@ namespace OsmTest.Android
 			// aapt resource value: 0x7f0d000b
 			public const int tabMode = 2131558411;
 			
-			// aapt resource value: 0x7f0d005a
-			public const int text = 2131558490;
+			// aapt resource value: 0x7f0d005c
+			public const int text = 2131558492;
 			
-			// aapt resource value: 0x7f0d0058
-			public const int text2 = 2131558488;
+			// aapt resource value: 0x7f0d005a
+			public const int text2 = 2131558490;
 			
 			// aapt resource value: 0x7f0d0034
 			public const int textSpacerNoButtons = 2131558452;
 			
-			// aapt resource value: 0x7f0d0056
-			public const int time = 2131558486;
+			// aapt resource value: 0x7f0d0050
+			public const int text_label = 2131558480;
+			
+			// aapt resource value: 0x7f0d0058
+			public const int time = 2131558488;
 			
 			// aapt resource value: 0x7f0d002a
 			public const int title = 2131558442;

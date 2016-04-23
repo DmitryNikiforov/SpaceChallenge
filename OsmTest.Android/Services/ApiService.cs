@@ -9,6 +9,7 @@ using System.Xml;
 using System.Xml.Serialization;
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.OS;
 using Android.Runtime;
 using Android.Views;
@@ -48,14 +49,27 @@ namespace OsmTest.Android.Services
          return await GetJsonAsync("http://spaceherdsmans.azurewebsites.net/api/values");
       }
 
+      public async Task<Bitmap> DownloadTile(int zoomLevel, double x, double y)
+      {
+         AzureService service = new AzureService();
+         Stream stream = service.CreateBitmap($"http://b.tile.openstreetmap.org/{zoomLevel}/{x}/{y}.png");
+         byte[] imageBytes = new byte[stream.Length];
+         stream.Read(imageBytes, 0, (int)stream.Length);
+         BitmapFactory.Options options = new BitmapFactory.Options();
+         options.InPurgeable = true;
+         options.InInputShareable = true;
+         options.InPreferredConfig = Bitmap.Config.Argb8888;
+         return BitmapFactory.DecodeByteArray(imageBytes, 0, imageBytes.Length, options);
+      }
+
       public async Task<List<OsmGeo>> DownloadArea(double leftLong, double bottomLat, double rightLong, double topLat)
       {
          AzureService wc = new AzureService();
 
-         string s =
+         string res =
                await wc.DownloadStringAsync(
                      $"http://overpass.osm.rambler.ru/cgi/xapi_meta?*[bbox={leftLong}, {bottomLat}, {rightLong}, {topLat}]", 120000);
-         if (s == null)
+         if (res == null)
          {
             throw new Exception("Reading unsuccessful");
          }
@@ -67,20 +81,16 @@ namespace OsmTest.Android.Services
          }
          using (StreamWriter bytes = new StreamWriter(path, true))
          {
-            bytes.WriteLine(s);
+            bytes.WriteLine(res);
          }
+         return Deserialize(res);
+      }
 
-         //Stream res =
-         //      await wc.DownloadStreamAsync(
-         //            $"http://overpass.osm.rambler.ru/cgi/xapi_meta?*[bbox={leftLong}, {bottomLat}, {rightLong}, {topLat}]", 120000);
-         //if (res == null)
-         //{
-         //   throw new Exception("Reading unsuccessful");
-         //}
-
-         if (s == null || s.Trim().Length <= 0)
+      private List<OsmGeo> Deserialize(string deserialized)
+      {
+         if (deserialized == null || deserialized.Trim().Length <= 0)
             return (List<OsmGeo>)null;
-         OsmDocument osmDocument = new OsmDocument((IXmlSource)new XmlReaderSource(XmlReader.Create((TextReader)new StringReader(s), new XmlReaderSettings() {DtdProcessing = DtdProcessing.Parse})));
+         OsmDocument osmDocument = new OsmDocument((IXmlSource)new XmlReaderSource(XmlReader.Create((TextReader)new StringReader(deserialized), new XmlReaderSettings() { DtdProcessing = DtdProcessing.Parse })));
          List<OsmGeo> list = new List<OsmGeo>();
          osm osm = osmDocument.Osm as osm;
          if (osm.node != null)
@@ -99,9 +109,6 @@ namespace OsmTest.Android.Services
                list.Add((OsmGeo)this.Convertv6XmlRelation(xml_relation));
          }
          return list;
-
-         //XmlSerializer serializer = new XmlSerializer(typeof(OsmSharp.Osm.OsmGeo));
-         //return serializer.Deserialize(res) as OsmSharp.Osm.OsmGeo;
       }
 
       private OsmSharp.Osm.Node Convertv6XmlNode(node xml_node)
