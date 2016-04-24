@@ -31,6 +31,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Services\CouchDbGeoObjectsService.cs" />
+    <Compile Include="Services\GeoJsonObject.cs" />
     <Compile Include="Services\IGeoObjectsService.cs" />
     <Compile Include="MyClass.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

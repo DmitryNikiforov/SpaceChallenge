@@ -1,35 +1,45 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using Couchbase.Lite;
+using Couchbase.Lite.Auth;
 using GeoJSON.Net.Feature;
+using GeoJSON.Net.Geometry;
+using Newtonsoft.Json;
 
 namespace OsmTest.Core.Services
 {
     public class CouchDbGeoObjectsService : IGeoObjectsService
     {
-        private readonly string _viewName;
+        private readonly QueryEnumerator _docs;
         private readonly Database _db = Manager.SharedInstance.GetDatabase("main");
 
-        public CouchDbGeoObjectsService(Uri serverUrl, string viewName)
+        public CouchDbGeoObjectsService(string viewName)
         {
-            _viewName = viewName;
+            var url = new Uri("http://104.236.29.68:4985/sync_gateway/");
+            var auth = AuthenticatorFactory.CreateBasicAuthenticator("mobile", "123123");
 
-            //var replication = _db.CreatePullReplication(serverUrl);
-            //replication.Continuous = true;
-            //replication.Start();
+            var pull = _db.CreatePullReplication(url);
+            pull.Continuous = true;
+            pull.Channels = new[] { "geo" };
+            pull.Authenticator = auth;
+            pull.Start();
+
+            var view = _db.GetView("geo");
+            view.SetMap((document, emit) =>
+            {
+                if (document.ContainsKey("geometry") && document.ContainsKey("name"))
+                {
+                    emit(new[] { document["geometry"] }, document);
+                }
+            }, "1");
+
+            _docs = view.CreateQuery().Run();
         }
 
-        public FeatureCollection GetCloseUsers(Feature point, double radius)
+        public ICollection<GeoJsonObject> GetRivers(Feature point, double radius)
         {
-            var res = new FeatureCollection();
-            using (var query = _db.GetView(_viewName).CreateQuery())
-            {
-                foreach (var entry in query.Run())
-                {
-                    res.Features.Add(entry.ValueAs<Feature>());
-                }
-            }
-
-            return res;
+            return _docs.Select(JsonConvert.SerializeObject).Select(JsonConvert.DeserializeObject<GeoJsonObject>).ToList();
         }
     }
 }

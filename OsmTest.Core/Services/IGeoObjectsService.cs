@@ -1,9 +1,10 @@
+using System.Collections.Generic;
 using GeoJSON.Net.Feature;
 
 namespace OsmTest.Core.Services
 {
     public interface IGeoObjectsService
     {
-        FeatureCollection GetCloseUsers(Feature point, double radius);
+        ICollection<GeoJsonObject> GetRivers(Feature point, double radius);
     }
 }
