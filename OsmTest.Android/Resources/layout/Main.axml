@@ -3,11 +3,6 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/text_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Идет подготовка изображения" />
     <org.osmdroid.views.MapView
         android:id="@+id/mapview"
         android:layout_width="fill_parent"

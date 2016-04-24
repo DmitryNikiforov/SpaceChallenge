@@ -41,9 +41,13 @@ namespace OsmTest.Core.Services
         public ICollection<GeoJsonObject> GetRivers(Feature point, double radius)
         {
          List<GeoJsonObject> objects = new List<GeoJsonObject>();
-          for(int i = 0; i < 150; i++)
+          for(int i = 0; i < 1000; i++)
           {
             var coord = _docs.Skip(i).Take(1).FirstOrDefault();
+             if (coord == null)
+             {
+                break;
+             }
             var serial = JsonConvert.SerializeObject(coord.Value);
             Debug.WriteLine(serial);
             var current = JsonConvert.DeserializeObject<GeoJsonObject>(serial);

@@ -27,6 +27,7 @@ using OsmDroid.Views;
 using OsmDroid.Views.Overlay;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.UI.Map.Styles;
+using OsmTest.Android.Adapter;
 using OsmTest.Android.Views;
 using OsmTest.Core.Services;
 using AlertDialog = Android.Support.V7.App.AlertDialog;
@@ -34,7 +35,7 @@ using AlertDialog = Android.Support.V7.App.AlertDialog;
 
 namespace OsmTest.Android
 {
-	[Activity (Label = "OsmTest", MainLauncher = true, Icon = "@mipmap/icon", Theme = "@style/Theme.AppCompat.Light")]
+	[Activity (Label = "Moses", MainLauncher = true, Icon = "@mipmap/icon", Theme = "@style/Theme.AppCompat.Light")]
 	public class MainActivity : ActionBarActivity, IDialogInterfaceOnClickListener
    {
       /// <summary>
@@ -78,12 +79,46 @@ relation node, relation way, relation relation
 	   IGeoObjectsService _geoService = null;
       //private MapView _mapView;
 
+	   private RelativeLayout _sos = null;
+	   protected RelativeLayout _layers = null;
+	   protected RelativeLayout _myLocation = null;
+
       GeoPoint _centreOfMap = new GeoPoint(-6.3423888, 35.392372);
       protected async override void OnCreate(Bundle bundle)
       {
          base.OnCreate(bundle);
          SetContentView(Resource.Layout.Main);
          _service = new ApiService();
+         SupportActionBar.DisplayOptions = (int)ActionBarDisplayOptions.ShowCustom;
+         SupportActionBar.SetCustomView(Resource.Layout.ActionBar_Moses);
+         _sos = SupportActionBar.CustomView.FindViewById<RelativeLayout>(Resource.Id.sos);
+         _myLocation = SupportActionBar.CustomView.FindViewById<RelativeLayout>(Resource.Id.where_i);
+         _layers = SupportActionBar.CustomView.FindViewById<RelativeLayout>(Resource.Id.layers);
+
+         _sos.Click += delegate (object sender, EventArgs args)
+         {
+            Toast.MakeText(this, "Help me!!!!", ToastLength.Long).Show();
+         };
+         _layers.Click += delegate (object sender, EventArgs args)
+         {
+            AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
+            builderSingle.SetTitle("Type");
+
+            ArrayAdapterWithIcon arrayAdapter = new ArrayAdapterWithIcon(
+                    this,
+                    Android.Resource.Layout.select_dialog_singlechoice_material);
+            arrayAdapter.Add(new ListItem() { ImageResourceId = Resource.Drawable.tse_tse });
+            arrayAdapter.Add(new ListItem() { ImageResourceId = Resource.Drawable.grass });
+            arrayAdapter.Add(new ListItem() { ImageResourceId = Resource.Drawable.water });
+            arrayAdapter.Add(new ListItem() { ImageResourceId = Resource.Drawable.fire });
+            builderSingle.SetNegativeButton("Cancel", NegativeHandler);
+            builderSingle.SetAdapter(arrayAdapter, this);
+            builderSingle.Show();
+         };
+         _myLocation.Click += delegate (object sender, EventArgs args)
+         {
+            _mapController.SetCenter(_centreOfMap);
+         };
          //StyleInterpreter interpreter = null;
          try
          {
@@ -116,7 +151,7 @@ relation node, relation way, relation relation
                //_mapView.Overlays.Add(myPath);
 
                _mapController = _mapView.Controller;
-               _mapController.SetZoom(2);
+               _mapController.SetZoom(6);
                
                _mapController.SetCenter(_centreOfMap);
 
@@ -184,6 +219,12 @@ relation node, relation way, relation relation
          _provider.StopLocationProvider();
 	   }
 
+	   protected override void OnStart()
+	   {
+	      base.OnStart();
+        
+	   }
+
 	   protected async override void OnResume()
 	   {
 	      base.OnResume();
@@ -193,39 +234,7 @@ relation node, relation way, relation relation
 	   {
 	      base.OnPause();
       }
-
-	   public override bool OnCreateOptionsMenu(IMenu menu)
-      {
-         var inflater = MenuInflater;
-         inflater.Inflate(Resource.Menu.action_items, menu);
-         return true;
-      }
-
-      public override bool OnOptionsItemSelected(IMenuItem item)
-      {
-         switch (item.ItemId)
-         {
-            case Resource.Id.atn_direct_enable:
-               _mapController.SetCenter(_centreOfMap);
-               return true;
-            case Resource.Id.atn_direct_discover:
-               AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
-               builderSingle.SetTitle("Type");
-
-               ArrayAdapter< string > arrayAdapter = new ArrayAdapter<string>(
-                       this,
-                       Android.Resource.Layout.select_dialog_singlechoice_material);
-               arrayAdapter.Add("Tse-Tse");
-               arrayAdapter.Add("Grass");
-               arrayAdapter.Add("Rivers");
-               builderSingle.SetNegativeButton("Cancel", NegativeHandler);
-               builderSingle.SetAdapter(arrayAdapter, this);
-               builderSingle.Show();
-               return true;
-            default:
-               return base.OnOptionsItemSelected(item);
-         }
-      }
+      
 
 	   private void NegativeHandler(object sender, DialogClickEventArgs dialogClickEventArgs)
 	   {
@@ -260,7 +269,7 @@ relation node, relation way, relation relation
             case 1:
 	         {
                GeoPoint leftTopGeo = new GeoPoint(39.301256, -20.008362);
-               GeoPoint rightBottomGeo = new GeoPoint(-37.787103, 54.259213);
+               GeoPoint rightBottomGeo = new GeoPoint(-37.787103, 51.759213);
                Bitmap tanzania = BitmapFactory.DecodeResource(Resources, Resource.Drawable.green_africa);
                Overlay newOverlay = new BitmapOverlay(this, leftTopGeo, rightBottomGeo, tanzania);
                _mapView.Overlays.Add(newOverlay);
@@ -268,8 +277,7 @@ relation node, relation way, relation relation
                break;
             case 2:
 	         {
-                  
-                  var points = _geoService.GetRivers(null, 0);
+               var points = _geoService.GetRivers(null, 0);
 	            GeoPoint lastPoint = null;
 	            foreach (GeoJsonObject geoJsonObject in points)
 	            {
@@ -286,8 +294,20 @@ relation node, relation way, relation relation
                
                }
 	            break;
+            case 3:
+               {
+                  GeoPoint leftTopGeo = new GeoPoint(39.301256, -20.008362);
+                  GeoPoint rightBottomGeo = new GeoPoint(-37.787103, 51.759213);
+                  Bitmap tanzania = BitmapFactory.DecodeResource(Resources, Resource.Drawable.fire_africa);
+                  Overlay newOverlay = new BitmapOverlay(this, leftTopGeo, rightBottomGeo, tanzania);
+                  _mapView.Overlays.Add(newOverlay);
+               }
+               break;
          }
-	   }
+
+
+         //54.259213
+      }
    }
 }
 
