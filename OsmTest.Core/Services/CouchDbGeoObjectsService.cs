@@ -10,6 +10,11 @@ using Newtonsoft.Json;
 
 namespace OsmTest.Core.Services
 {
+    public interface IGeoObjectsService
+    {
+        ICollection<GeoJsonObject> GetRivers(Feature point, double radius);
+    }
+
     public class CouchDbGeoObjectsService : IGeoObjectsService
     {
         private readonly QueryEnumerator _docs;
