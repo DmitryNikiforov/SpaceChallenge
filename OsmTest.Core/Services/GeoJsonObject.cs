@@ -6,17 +6,19 @@ using GeoJSON.Net;
 
 namespace OsmTest.Core.Services
 {
-    public class GeoJsonObject
-    {
-        public string Name { get; set; }
-        public string Type { get; set; }
-        public string SubType { get; set; }
-        public JSGeometry Geometry { get; set; }
+   public class Geometry
+   {
+      public List<List<double>> coordinates { get; set; }
+      public string type { get; set; }
+   }
 
-        public class JSGeometry
-        {
-            public GeoJSONObjectType Type;
-            public double[][] Coordinates;
-        }
-    }
+   public class GeoJsonObject
+   {
+      public Geometry geometry { get; set; }
+      public string name { get; set; }
+      public string subtype { get; set; }
+      public string type { get; set; }
+      public string _id { get; set; }
+      public string _rev { get; set; }
+   }
 }

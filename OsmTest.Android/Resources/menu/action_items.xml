@@ -4,12 +4,12 @@
   <item
       android:id="@+id/atn_direct_enable"
       android:icon="@drawable/ic_action_on_off"
-      android:title="Обновить с сервиса"
+      android:title="Where am I?"
       android:showAsAction="ifRoom|withText" />
 
   <item
       android:id="@+id/atn_direct_discover"
       android:icon="@drawable/ic_action_discover"
-      android:title="Синхронизация"
+      android:title="Layers"
       android:showAsAction="ifRoom|withText" />
 </menu>

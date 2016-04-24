@@ -75,6 +75,7 @@ relation node, relation way, relation relation
     color:#d0f;
 }";
       private IMapController _mapController;
+	   IGeoObjectsService _geoService = null;
       //private MapView _mapView;
 
       GeoPoint _centreOfMap = new GeoPoint(-6.3423888, 35.392372);
@@ -93,7 +94,7 @@ relation node, relation way, relation relation
                _mapView = FindViewById<MapView>(Resource.Id.mapview);
                _mapView.SetTileSource(TileSourceFactory.DefaultTileSource);
                _mapView.SetBuiltInZoomControls(true);
-               _mapView.SetUseDataConnection(false);
+               //_mapView.SetUseDataConnection(false);
 
                _provider = new CustomLocationProvider(this);
                _provider.StartLocationProvider(new MyLocationNewOverlay(this, _mapView));
@@ -119,19 +120,8 @@ relation node, relation way, relation relation
                
                _mapController.SetCenter(_centreOfMap);
 
-               try
-               {
-                  var db = Couchbase.Lite.Manager.SharedInstance.GetDatabase("space_herdsman");
-                  if (db != null)
-                  {
-                  }
-               }
-               catch (Exception e)
-               {
-                  
-               }
-               IGeoObjectsService service = new CouchDbGeoObjectsService(new Uri("http://google.com"), "ssd");
-               var points = service.GetCloseUsers(null, 0);
+               _geoService = new CouchDbGeoObjectsService();
+               
                //var firstPoint = ((GeoJSON.Net.Geometry.Point) points.Features[0].Geometry);
                var firstPoint = new OsmSharp.Geo.Geometries.Point(new OsmSharp.Math.Geo.GeoCoordinate(33, -10));
                //double x = ((GeographicPosition) firstPoint.Coordinates).Latitude;
@@ -225,8 +215,9 @@ relation node, relation way, relation relation
                ArrayAdapter< string > arrayAdapter = new ArrayAdapter<string>(
                        this,
                        Android.Resource.Layout.select_dialog_singlechoice_material);
-               arrayAdapter.Add("illness");
+               arrayAdapter.Add("Tse-Tse");
                arrayAdapter.Add("Grass");
+               arrayAdapter.Add("Rivers");
                builderSingle.SetNegativeButton("Cancel", NegativeHandler);
                builderSingle.SetAdapter(arrayAdapter, this);
                builderSingle.Show();
@@ -274,6 +265,26 @@ relation node, relation way, relation relation
                Overlay newOverlay = new BitmapOverlay(this, leftTopGeo, rightBottomGeo, tanzania);
                _mapView.Overlays.Add(newOverlay);
             }
+               break;
+            case 2:
+	         {
+                  
+                  var points = _geoService.GetRivers(null, 0);
+	            GeoPoint lastPoint = null;
+	            foreach (GeoJsonObject geoJsonObject in points)
+	            {
+                  PathOverlay newOverlay = new PathOverlay(Color.Blue, this);
+                  foreach (List<double> coordinate in geoJsonObject.geometry.coordinates)
+	               {
+	                  var point = new GeoPoint(coordinate[0], coordinate[1]);
+                     newOverlay.AddPoint(point);
+	                  lastPoint = point;
+	               }
+                  _mapView.Overlays.Add(newOverlay);
+               }
+               _mapController.SetCenter(lastPoint);
+               
+               }
 	            break;
          }
 	   }
