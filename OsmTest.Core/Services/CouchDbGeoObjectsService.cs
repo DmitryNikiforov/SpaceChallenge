@@ -10,6 +10,11 @@ using Newtonsoft.Json;
 
 namespace OsmTest.Core.Services
 {
+    public interface IGeoObjectsService
+    {
+        ICollection<GeoJsonObject> GetRivers(Feature point, double radius);
+    }
+
     public class CouchDbGeoObjectsService : IGeoObjectsService
     {
         private readonly QueryEnumerator _docs;
@@ -40,18 +45,18 @@ namespace OsmTest.Core.Services
 
         public ICollection<GeoJsonObject> GetRivers(Feature point, double radius)
         {
-         List<GeoJsonObject> objects = new List<GeoJsonObject>();
-          for(int i = 0; i < 150; i++)
-          {
-            var coord = _docs.Skip(i).Take(1).FirstOrDefault();
-            var serial = JsonConvert.SerializeObject(coord.Value);
-            Debug.WriteLine(serial);
-            var current = JsonConvert.DeserializeObject<GeoJsonObject>(serial);
-            objects.Add(current);
-         }
-           return objects;
-           //return new[] {first};
-         //return _docs.Select(JsonConvert.SerializeObject).Select(JsonConvert.DeserializeObject<GeoJsonObject>).ToList();
-      }
+            List<GeoJsonObject> objects = new List<GeoJsonObject>();
+            for (int i = 0; i < 150; i++)
+            {
+                var coord = _docs.Skip(i).Take(1).FirstOrDefault();
+                var serial = JsonConvert.SerializeObject(coord.Value);
+                Debug.WriteLine(serial);
+                var current = JsonConvert.DeserializeObject<GeoJsonObject>(serial);
+                objects.Add(current);
+            }
+            return objects;
+            //return new[] {first};
+            //return _docs.Select(JsonConvert.SerializeObject).Select(JsonConvert.DeserializeObject<GeoJsonObject>).ToList();
+        }
     }
 }

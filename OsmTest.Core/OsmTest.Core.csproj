@@ -30,10 +30,10 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Models\WeatherForecast.cs" />
+    <Compile Include="Services\ApiService.cs" />
     <Compile Include="Services\CouchDbGeoObjectsService.cs" />
-    <Compile Include="Services\GeoJsonObject.cs" />
-    <Compile Include="Services\IGeoObjectsService.cs" />
-    <Compile Include="MyClass.cs" />
+    <Compile Include="Models\GeoJsonObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Portable\$(TargetFrameworkVersion)\Microsoft.Portable.CSharp.targets" />
