@@ -43,8 +43,6 @@ namespace OsmTest.Android
       /// </summary>
       private MapView _mapView;
 
-	   ApiService _service = null;
-
 
       private CancellationTokenSource _cancellationTokenSource;
 	   CustomLocationProvider _provider = null;
@@ -88,7 +86,6 @@ relation node, relation way, relation relation
       {
          base.OnCreate(bundle);
          SetContentView(Resource.Layout.Main);
-         _service = new ApiService();
          SupportActionBar.DisplayOptions = (int)ActionBarDisplayOptions.ShowCustom;
          SupportActionBar.SetCustomView(Resource.Layout.ActionBar_Moses);
          _sos = SupportActionBar.CustomView.FindViewById<RelativeLayout>(Resource.Id.sos);
