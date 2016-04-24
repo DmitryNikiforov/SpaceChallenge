@@ -1,88 +1,112 @@
-//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
-//using Android.App;
-//using Android.Content;
-//using Android.Graphics;
-//using Android.OS;
-//using Android.Runtime;
-//using Android.Views;
-//using Android.Widget;
-//using OsmDroid;
-//using OsmDroid.Util;
-//using OsmDroid.Views;
-//using OsmDroid.Views.Overlay;
+using Android.App;
+using Android.Content;
+using Android.Graphics;
+using Android.Locations;
+using Android.OS;
+using Android.Runtime;
+using Android.Views;
+using Android.Widget;
+using OsmDroid;
+using OsmDroid.Api;
+using OsmDroid.Util;
+using OsmDroid.Views;
+using OsmDroid.Views.Overlay;
+using OsmSharp.IO.Xml.Kml.v2_1;
 
-//namespace OsmTest.Android.Views
-//{
-//   class BitmapOverlay : Overlay
-//   {
-//      public BitmapOverlay(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
-//      {
-//      }
+namespace OsmTest.Android.Views
+{
+   class BitmapOverlay : Overlay
+   {
+      private Location _location;
+      private readonly Bitmap _bitmap;
 
-//      public BitmapOverlay(Context p0) : base(p0)
-//      {
-//      }
+      public BitmapOverlay(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
+      {
+      }
 
-//      public BitmapOverlay(IResourceProxy p0) : base(p0)
-//      {
-//      }
+      public BitmapOverlay(Context p0) : base(p0)
+      {
+      }
 
-//      private void drawPlane(Canvas cs, Point ctr, float bearing)
-//      {
+      public BitmapOverlay(Context p0, /*Location location,*/ Bitmap bitmap) : base(p0)
+      {
+         //_location = location;
+         _bitmap = bitmap;
+      }
 
-//         Paint paint = new Paint();
-//         paint.Color = Color.Red;
-//         paint.AntiAlias = true;
+      public BitmapOverlay(IResourceProxy p0) : base(p0)
+      {
+      }
 
-//         Bitmap planeBM = Bitmap.CreateBitmap(cs.Width, cs.Height, Bitmap.Config.Argb8888);
-//         planeBM.Density = cs.Density;
-//         Canvas c = new Canvas(planeBM);
+      //private void drawPlane(Canvas cs, Point center, float bearing)
+      //{
 
-//         Rect r = new Rect();
+      //   Paint paint = new Paint();
+      //   paint.Color = Color.Red;
+      //   paint.AntiAlias = true;
 
-//         //Point center = new Point(cs.getWidth() / 2, cs.getHeight() /2);
-//         Point center = new Point(0, 0);
+      //   Bitmap planeBM = Bitmap.CreateBitmap(_bitmap,);
+      //   planeBM.Density = cs.Density;
+      //   Canvas c = new Canvas(planeBM);
 
-//         // Draw fuselage
-//         r.Left = center.X - PLANE_WIDTH / 2;
-//         r.Right = r.Left + PLANE_WIDTH;
-//         r.Top = center.Y - PLANE_SIZE / 3;
-//         r.Bottom = r.Top + PLANE_SIZE;
+      //   Rect r = new Rect();
+      //   //Point center = new Point(cs.Width / 2, cs.Height / 2);
+      //   //Point center = new Point(0, 0);
 
-//         c.DrawRect(r, paint);
+      //   // Draw fuselage
+      //   r.Left = center.X - cs.Width / 2;
+      //   r.Right = r.Left + cs.Width;
+      //   r.Top = center.Y - cs.Height / 3;
+      //   r.Bottom = r.Top + cs.Height;
 
-//         // Draw wing (REMOVED)
+      //   c.DrawRect(r, paint);
 
-//         // Draw stabilizer    (REMOVED)
+      //   // Draw wing (REMOVED)
 
-//         // TODO Draw Speed vector
+      //   // Draw stabilizer    (REMOVED)
+
+      //   // TODO Draw Speed vector
 
 
-//         // "Merging" canvas
+      //   // "Merging" canvas
 
-//         Matrix merge = new Matrix(cs.Matrix);
-//         //merge.setTranslate(0, 0);
-//         //merge.setRotate(bearing, center.x, center.y);
-//         cs.DrawBitmap(planeBM, merge, paint);
-//         cs.Save();
+      //   Matrix merge = new Matrix(cs.Matrix);
+      //   //merge.SetTranslate(loc.x - pCenter.x, loc.y - pCenter.y);
+      //   //merge.PostRotate(bearing, loc.x, loc.y);
+      //   cs.DrawBitmap(planeBM, merge, paint);
+      //   cs.Save();
 
-//      }
+      //}
 
-//      public override void Draw(Canvas p0, MapView p1, bool p2)
-//      {
-//         if (location != null)
-//         {
-//            Point locPoint = new Point();
-//            GeoPoint locGeoPoint = new GeoPoint(location);
-//            Projection pj = mapView.getProjection();
-//            pj.ToMercatorPixels(locGeoPoint.Latitude, , locPoint);
+      public override void Draw(Canvas cs, MapView mapView, bool shadow)
+      {
+         if (_bitmap != null)
+         {
+            IProjection pj = mapView.Projection;
 
-//            this.drawPlane(c, locPoint, location.getBearing());
-//         }
-//      }
-//   }
-//}
+            GeoPoint leftTopGeo = new GeoPoint(-1.686000, 33.558542);
+            Point leftTop = new Point();
+            pj.ToPixels(leftTopGeo, leftTop);
+
+            GeoPoint rightBottomGeo = new GeoPoint(-11.409878, 42.633248);
+            Point rightBottom = new Point();
+            pj.ToPixels(rightBottomGeo, rightBottom);
+
+            //Point locPoint = new Point();
+            //GeoPoint locGeoPoint = new GeoPoint(_location);
+            
+            //pj.ToPixels(locGeoPoint, locPoint);
+
+            System.Diagnostics.Debug.WriteLine($"Draw tanzania fire. left {leftTop.X}, top {leftTop.Y}, right {rightBottom.X}, bottom {rightBottom.Y}");
+            Rect rect = new Rect(leftTop.X, leftTop.Y, rightBottom.X, rightBottom.Y);
+            cs.DrawBitmap(_bitmap, null, rect, new Paint());
+            //this.drawPlane(cs, locPoint, _location.Bearing);
+         }
+      }
+   }
+}

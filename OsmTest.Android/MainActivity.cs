@@ -20,12 +20,14 @@ using OsmTest.Android.Services;
 using Environment = Android.OS.Environment;
 
 using OsmDroid.Api;
+using OsmDroid.TileProvider;
 using OsmDroid.TileProvider.TileSource;
 using OsmDroid.Util;
 using OsmDroid.Views;
 using OsmDroid.Views.Overlay;
 using OsmSharp.Geo.Geometries;
 using OsmSharp.UI.Map.Styles;
+using OsmTest.Android.Views;
 using OsmTest.Core.Services;
 
 
@@ -74,7 +76,7 @@ relation node, relation way, relation relation
       private IMapController _mapController;
       //private MapView _mapView;
 
-      GeoPoint _centreOfMap = new GeoPoint(-6.3423888, 30.392372);
+      GeoPoint _centreOfMap = new GeoPoint(-6.3423888, 35.392372);
       protected async override void OnCreate(Bundle bundle)
       {
          base.OnCreate(bundle);
@@ -127,19 +129,23 @@ relation node, relation way, relation relation
                {
                   
                }
-               IGeoObjectsService service = new CouchDbGeoObjectsService(new Uri(""), "ssd");
+               IGeoObjectsService service = new CouchDbGeoObjectsService(new Uri("http://google.com"), "ssd");
                var points = service.GetCloseUsers(null, 0);
-               var firstPoint = ((GeoJSON.Net.Geometry.Point) points.Features[0].Geometry);
-               double x = ((GeographicPosition) firstPoint.Coordinates).Latitude;
-               double y = ((GeographicPosition)firstPoint.Coordinates).Longitude;
-               List<OverlayItem> overlayItemArray = new List<OverlayItem>();
-               OverlayItem olItem = new OverlayItem("Here", "SampleDescription", new GeoPoint(x, y));
-               overlayItemArray.Add(olItem);
-               
+               //var firstPoint = ((GeoJSON.Net.Geometry.Point) points.Features[0].Geometry);
+               var firstPoint = new OsmSharp.Geo.Geometries.Point(new OsmSharp.Math.Geo.GeoCoordinate(33, -10));
+               //double x = ((GeographicPosition) firstPoint.Coordinates).Latitude;
+               //double y = ((GeographicPosition)firstPoint.Coordinates).Longitude;
+               //List<OverlayItem> overlayItemArray = new List<OverlayItem>();
+               //OverlayItem olItem = new OverlayItem("Here", "SampleDescription", new GeoPoint(x, y));
+               //overlayItemArray.Add(olItem);
+               //olItem.SetMarker(Resources.GetDrawable(Resource.Drawable.cloud));
 
-               olItem.SetMarker(Resources.GetDrawable(Resource.Drawable.cloud));
-               ItemizedIconOverlay newPoints = new ItemizedIconOverlay(overlayItemArray, null, defaultResourceProxyImpl);
-               _mapView.Overlays.Add(newPoints);
+               Bitmap tanzania = BitmapFactory.DecodeResource(Resources, Resource.Drawable.tsetse_tanzania);
+               //ItemizedIconOverlay newPoints = new ItemizedIconOverlay(overlayItemArray, null, defaultResourceProxyImpl);
+               //_mapView.Overlays.Add(newPoints);
+
+               Overlay newOverlay = new BitmapOverlay(this, tanzania);
+               _mapView.Overlays.Add(newOverlay);
             }
             else
             {
