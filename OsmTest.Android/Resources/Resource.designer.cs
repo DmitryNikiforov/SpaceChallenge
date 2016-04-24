@@ -1439,22 +1439,25 @@ namespace OsmTest.Android
 			public const int cloud = 2130837578;
 			
 			// aapt resource value: 0x7f02004b
-			public const int ic_action_discover = 2130837579;
+			public const int green_africa = 2130837579;
 			
 			// aapt resource value: 0x7f02004c
-			public const int ic_action_on_off = 2130837580;
+			public const int ic_action_discover = 2130837580;
 			
 			// aapt resource value: 0x7f02004d
-			public const int ic_launcher = 2130837581;
+			public const int ic_action_on_off = 2130837581;
 			
 			// aapt resource value: 0x7f02004e
-			public const int icon = 2130837582;
-			
-			// aapt resource value: 0x7f020050
-			public const int notification_template_icon_bg = 2130837584;
+			public const int ic_launcher = 2130837582;
 			
 			// aapt resource value: 0x7f02004f
-			public const int tsetse_tanzania = 2130837583;
+			public const int icon = 2130837583;
+			
+			// aapt resource value: 0x7f020051
+			public const int notification_template_icon_bg = 2130837585;
+			
+			// aapt resource value: 0x7f020050
+			public const int tsetse_tanzania = 2130837584;
 			
 			static Drawable()
 			{

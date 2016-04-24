@@ -29,12 +29,13 @@ using OsmSharp.Geo.Geometries;
 using OsmSharp.UI.Map.Styles;
 using OsmTest.Android.Views;
 using OsmTest.Core.Services;
+using AlertDialog = Android.Support.V7.App.AlertDialog;
 
 
 namespace OsmTest.Android
 {
 	[Activity (Label = "OsmTest", MainLauncher = true, Icon = "@mipmap/icon", Theme = "@style/Theme.AppCompat.Light")]
-	public class MainActivity : ActionBarActivity
+	public class MainActivity : ActionBarActivity, IDialogInterfaceOnClickListener
    {
       /// <summary>
       /// Holds the mapview.
@@ -114,7 +115,7 @@ relation node, relation way, relation relation
                //_mapView.Overlays.Add(myPath);
 
                _mapController = _mapView.Controller;
-               _mapController.SetZoom(25);
+               _mapController.SetZoom(2);
                
                _mapController.SetCenter(_centreOfMap);
 
@@ -139,13 +140,9 @@ relation node, relation way, relation relation
                //OverlayItem olItem = new OverlayItem("Here", "SampleDescription", new GeoPoint(x, y));
                //overlayItemArray.Add(olItem);
                //olItem.SetMarker(Resources.GetDrawable(Resource.Drawable.cloud));
-
-               Bitmap tanzania = BitmapFactory.DecodeResource(Resources, Resource.Drawable.tsetse_tanzania);
+               
                //ItemizedIconOverlay newPoints = new ItemizedIconOverlay(overlayItemArray, null, defaultResourceProxyImpl);
                //_mapView.Overlays.Add(newPoints);
-
-               Overlay newOverlay = new BitmapOverlay(this, tanzania);
-               _mapView.Overlays.Add(newOverlay);
             }
             else
             {
@@ -222,20 +219,27 @@ relation node, relation way, relation relation
                _mapController.SetCenter(_centreOfMap);
                return true;
             case Resource.Id.atn_direct_discover:
+               AlertDialog.Builder builderSingle = new AlertDialog.Builder(this);
+               builderSingle.SetTitle("Type");
+
+               ArrayAdapter< string > arrayAdapter = new ArrayAdapter<string>(
+                       this,
+                       Android.Resource.Layout.select_dialog_singlechoice_material);
+               arrayAdapter.Add("illness");
+               arrayAdapter.Add("Grass");
+               builderSingle.SetNegativeButton("Cancel", NegativeHandler);
+               builderSingle.SetAdapter(arrayAdapter, this);
+               builderSingle.Show();
                return true;
             default:
                return base.OnOptionsItemSelected(item);
          }
       }
 
-	   private async void UpdateFromService()
+	   private void NegativeHandler(object sender, DialogClickEventArgs dialogClickEventArgs)
 	   {
-         ApiService service = new ApiService();
-
-         string testData = await service.GetTestData();
-         Toast toast = Toast.MakeText(this, testData, ToastLength.Long);
-         toast.Show();
-      }
+         ((AlertDialog)sender).Dismiss();
+	   }
 
 	   //private async Task<MvxGeoLocation> UpdateLocation()
 	   //{
@@ -244,6 +248,35 @@ relation node, relation way, relation relation
     //     var locationService = Mvx.Resolve<LocationService>();
 	   //   return await locationService.GetLocation(_cancellationTokenSource);
 	   //}
+	   public void OnClick(IDialogInterface dialog, int which)
+	   {
+	      for (int i = _mapView.Overlays.Count - 1; i >= 0; i--)
+	      {
+	         _mapView.Overlays.RemoveAt(i);
+	      }
+         _mapView.Invalidate();
+	      switch (which)
+	      {
+            case 0:
+	         {
+               GeoPoint leftTopGeo = new GeoPoint(-1.686000, 33.558542);
+               GeoPoint rightBottomGeo = new GeoPoint(-11.409878, 42.633248);
+               Bitmap tanzania = BitmapFactory.DecodeResource(Resources, Resource.Drawable.tsetse_tanzania);
+	            Overlay newOverlay = new BitmapOverlay(this, leftTopGeo, rightBottomGeo, tanzania);
+	            _mapView.Overlays.Add(newOverlay);
+	         }
+	         break;
+            case 1:
+	         {
+               GeoPoint leftTopGeo = new GeoPoint(39.301256, -20.008362);
+               GeoPoint rightBottomGeo = new GeoPoint(-37.787103, 54.259213);
+               Bitmap tanzania = BitmapFactory.DecodeResource(Resources, Resource.Drawable.green_africa);
+               Overlay newOverlay = new BitmapOverlay(this, leftTopGeo, rightBottomGeo, tanzania);
+               _mapView.Overlays.Add(newOverlay);
+            }
+	            break;
+         }
+	   }
    }
 }
 

@@ -23,6 +23,8 @@ namespace OsmTest.Android.Views
    class BitmapOverlay : Overlay
    {
       private Location _location;
+      private readonly GeoPoint _pointLeftTop;
+      private readonly GeoPoint _pointRightBottom;
       private readonly Bitmap _bitmap;
 
       public BitmapOverlay(IntPtr javaReference, JniHandleOwnership transfer) : base(javaReference, transfer)
@@ -33,9 +35,11 @@ namespace OsmTest.Android.Views
       {
       }
 
-      public BitmapOverlay(Context p0, /*Location location,*/ Bitmap bitmap) : base(p0)
+      public BitmapOverlay(Context p0, GeoPoint pointLeftTop, GeoPoint pointRightBottom, Bitmap bitmap) : base(p0)
       {
          //_location = location;
+         _pointLeftTop = pointLeftTop;
+         _pointRightBottom = pointRightBottom;
          _bitmap = bitmap;
       }
 
@@ -85,17 +89,17 @@ namespace OsmTest.Android.Views
 
       public override void Draw(Canvas cs, MapView mapView, bool shadow)
       {
-         if (_bitmap != null)
+         if (_bitmap != null && _pointLeftTop != null && _pointRightBottom != null)
          {
             IProjection pj = mapView.Projection;
 
-            GeoPoint leftTopGeo = new GeoPoint(-1.686000, 33.558542);
+            //GeoPoint leftTopGeo = new GeoPoint(-1.686000, 33.558542);
             Point leftTop = new Point();
-            pj.ToPixels(leftTopGeo, leftTop);
+            pj.ToPixels(_pointLeftTop, leftTop);
 
-            GeoPoint rightBottomGeo = new GeoPoint(-11.409878, 42.633248);
+            //GeoPoint rightBottomGeo = new GeoPoint(-11.409878, 42.633248);
             Point rightBottom = new Point();
-            pj.ToPixels(rightBottomGeo, rightBottom);
+            pj.ToPixels(_pointRightBottom, rightBottom);
 
             //Point locPoint = new Point();
             //GeoPoint locGeoPoint = new GeoPoint(_location);
