@@ -120,6 +120,7 @@
     <Compile Include="Services\AzureService.cs" />
     <Compile Include="Services\CustomLocationProvider.cs" />
     <Compile Include="Views\BitmapOverlay.cs" />
+    <Compile Include="Views\GeoPositionOverlay.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="kempen-big.osm.pbf.contracted.mobile.routing" />

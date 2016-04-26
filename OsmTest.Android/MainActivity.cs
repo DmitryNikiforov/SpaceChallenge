@@ -75,6 +75,7 @@ relation node, relation way, relation relation
 }";
       private IMapController _mapController;
 	   IGeoObjectsService _geoService = null;
+	   private GeoPositionOverlay _geoPositionOverlay;
       //private MapView _mapView;
 
 	   private RelativeLayout _sos = null;
@@ -165,6 +166,12 @@ relation node, relation way, relation relation
                
                //ItemizedIconOverlay newPoints = new ItemizedIconOverlay(overlayItemArray, null, defaultResourceProxyImpl);
                //_mapView.Overlays.Add(newPoints);
+               _geoPositionOverlay = new GeoPositionOverlay(this);
+               _geoPositionOverlay.GeoPointTapped += delegate(object sender, IGeoPoint point)
+               {
+                  Toast.MakeText(this, $"X {point.Latitude}, Y {point.Longitude}", ToastLength.Long).Show();
+               };
+               _mapView.Overlays.Add(_geoPositionOverlay);
             }
             else
             {
