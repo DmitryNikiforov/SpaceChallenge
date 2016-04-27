@@ -31,7 +31,7 @@ namespace SpaceHerders.Web
             services.AddMvc();
             services.AddSwaggerGen();
             services.AddSingleton<IUsersLocationService, InMemoryUsersLocationService>();
-            services.AddTransient<ICrowdsourcedPointsService, CouchbaseCrowdsourcedPointsService>();
+            services.AddTransient<ICrowdsourcedPlacesService, CouchbaseCrowdsourcedPlacesService>();
 
             var config = new ClientConfiguration
             {
@@ -46,7 +46,8 @@ namespace SpaceHerders.Web
 
             };
             var cluster = new Cluster(config);
-            var bucket = cluster.OpenBucket();
+            var bucket = cluster.OpenBucket("geodb");
+            services.AddInstance(cluster);
             services.AddInstance(bucket);
 
         }

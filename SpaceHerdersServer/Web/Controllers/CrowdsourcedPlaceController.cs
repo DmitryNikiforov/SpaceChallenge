@@ -11,26 +11,29 @@ namespace SpaceHerders.Web.Controllers
     [Route("api/[controller]")]
     public class CrowdsourcedPlaceController : Controller
     {
-        private readonly ICrowdsourcedPointsService _crowdsourcedPointsService;
+        private readonly ICrowdsourcedPlacesService _crowdsourcedPlacesService;
         private readonly IUsersLocationService _usersLocationService;
 
-        public CrowdsourcedPlaceController(ICrowdsourcedPointsService crowdsourcedPointsService, IUsersLocationService usersLocationService)
+        public CrowdsourcedPlaceController(ICrowdsourcedPlacesService crowdsourcedPlacesService, IUsersLocationService usersLocationService)
         {
-            _crowdsourcedPointsService = crowdsourcedPointsService;
+            _crowdsourcedPlacesService = crowdsourcedPlacesService;
             _usersLocationService = usersLocationService;
         }
 
         [HttpGet("{userId}")]
-        public async Task<IEnumerable<Place>> Get(Guid userId)
+        public async Task<IEnumerable<CrowdsourcedPlace>> Get(Guid userId)
         {
             var lastPosition = await _usersLocationService.GetLastUserPosition(userId);
-            return await _crowdsourcedPointsService.GetClosePoint(lastPosition, 0);
+            return await _crowdsourcedPlacesService.GetClosePlaces(lastPosition, 0);
         }
 
         [HttpPost]
-        public async void PostPlace([FromBody]Place place)
+        public async Task<IActionResult> PostPlace([FromBody]CrowdsourcedPlace place)
         {
-            await _crowdsourcedPointsService.CreateCrowdsourcedPoint(place);
+            if (place == null) return new BadRequestObjectResult(ModelState);
+
+            await _crowdsourcedPlacesService.CreateCrowdsourcedPoint(place);
+            return Ok();
         }
     }
 }

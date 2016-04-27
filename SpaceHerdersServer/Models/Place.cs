@@ -7,6 +7,10 @@ namespace SpaceHerders.Models
     {
         public Guid PlaceId { get; set; }
 
-        public Point Geometry { get; set; }
+        public Point Point { get; set; }
+
+        public string Description { get; set; }
+
+        public DateTime CreationTime { get; set; }
     }
 }

@@ -1,0 +1,29 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "CouchbaseTest Console Application",
+  "authors": [ "a.bazhanau" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "compilationOptions": {
+    "emitEntryPoint": true
+  },
+
+  "commands": {
+    "CouchbaseTest": "CouchbaseTest"
+  },
+
+  "frameworks": {
+    "dnx451": {
+      "dependencies": {
+        "CouchbaseNetClient": "2.2.7",
+        "Linq2Couchbase": "1.1.0.2",
+        "Models": "1.0.0-*"
+      },
+      "frameworkAssemblies": {
+        "System.Runtime": "4.0.10.0"
+      }
+    }
+  }
+}
