@@ -2,14 +2,12 @@
 using System.Collections.Generic;
 using Couchbase;
 using Couchbase.Configuration.Client;
-using Couchbase.Configuration.Client.Providers;
-using Couchbase.Core;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using SpaceHerders.Web.Services;
+using SpaceHerders.Services;
 
 namespace SpaceHerders.Web
 {
@@ -49,6 +47,7 @@ namespace SpaceHerders.Web
             };
             var cluster = new Cluster(config);
             var bucket = cluster.OpenBucket();
+            services.AddInstance(bucket);
 
         }
 

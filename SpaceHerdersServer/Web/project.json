@@ -5,6 +5,7 @@
   },
 
   "dependencies": {
+    "CouchbaseNetClient": "2.2.7",
     "Microsoft.AspNet.IISPlatformHandler": "1.0.0-rc1-final",
     "Microsoft.AspNet.Mvc": "6.0.0-rc1-final",
     "Microsoft.AspNet.Server.Kestrel": "1.0.0-rc1-final",
@@ -14,7 +15,9 @@
     "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
     "Microsoft.Extensions.Logging.Console": "1.0.0-rc1-final",
     "Microsoft.Extensions.Logging.Debug": "1.0.0-rc1-final",
-    "Swashbuckle": "6.0.0-rc1-final"
+    "Swashbuckle": "6.0.0-rc1-final",
+    "Models": "",
+    "Services": ""     
   },
 
   "commands": {
@@ -23,10 +26,7 @@
 
   "frameworks": {
     "dnx451": {
-      "dependencies": {
-        "CouchbaseNetClient": "2.2.7",
-        "Linq2Couchbase": "1.1.0.2"
-      }
+
     }
   },
 
