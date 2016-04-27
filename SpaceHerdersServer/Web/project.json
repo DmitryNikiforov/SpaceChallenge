@@ -22,8 +22,12 @@
   },
 
   "frameworks": {
-    "dnx451": { },
-    "dnxcore50": { }
+    "dnx451": {
+      "dependencies": {
+        "CouchbaseNetClient": "2.2.7",
+        "Linq2Couchbase": "1.1.0.2"
+      }
+    }
   },
 
   "exclude": [

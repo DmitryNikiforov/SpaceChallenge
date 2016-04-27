@@ -1,4 +1,4 @@
-﻿namespace Space_Herdsmans.Models
+﻿namespace SpaceHerders.Web.Models
 {
     public class GeoCoordinates
     {
