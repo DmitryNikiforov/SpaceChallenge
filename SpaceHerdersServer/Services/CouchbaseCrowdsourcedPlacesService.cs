@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Couchbase;
 using Couchbase.Core;
+using Couchbase.Views;
 using GeoJSON.Net.Geometry;
 using SpaceHerders.Models;
 
@@ -10,7 +12,7 @@ namespace SpaceHerders.Services
 {
     public interface ICrowdsourcedPlacesService
     {
-        Task<ICollection<CrowdsourcedPlace>> GetClosePlaces(Point point, double radius);
+        Task<ICollection<CrowdsourcedPlace>> GetClosePlaces(GeographicPosition start, GeographicPosition end);
 
         Task CreateCrowdsourcedPoint(CrowdsourcedPlace place);
     }
@@ -24,10 +26,15 @@ namespace SpaceHerders.Services
             _bucket = bucket;
         }
 
-        public async Task<ICollection<CrowdsourcedPlace>> GetClosePlaces(Point point, double radius)
+        public async Task<ICollection<CrowdsourcedPlace>> GetClosePlaces(GeographicPosition start, GeographicPosition end)
         {
-            //_bucket.QueryAsync<View>()
-            return await Task.FromResult(new CrowdsourcedPlace[0]);
+            var query = new SpatialViewQuery().From("doc", "crowdsourcedpoints")
+                .Stale(StaleState.False)
+                .StartRange(start.Longitude, start.Latitude)
+                .EndRange(end.Longitude, end.Latitude);
+
+            var result = await _bucket.QueryAsync<CrowdsourcedPlace>(query);
+            return result.Rows.Select(x => x.Value).ToList();
         }
 
         public async Task CreateCrowdsourcedPoint(CrowdsourcedPlace place)
