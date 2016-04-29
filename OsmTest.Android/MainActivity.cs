@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Android.App;
 using Android.Content;
+using Android.Content.PM;
 using Android.Graphics;
 using Android.Graphics.Drawables;
 using Android.Locations;
@@ -35,7 +36,7 @@ using AlertDialog = Android.Support.V7.App.AlertDialog;
 
 namespace OsmTest.Android
 {
-	[Activity (Label = "Moses", MainLauncher = true, Icon = "@mipmap/icon", Theme = "@style/Theme.AppCompat.Light")]
+	[Activity (Label = "Moses", MainLauncher = true, Icon = "@mipmap/icon", Theme = "@style/Theme.AppCompat.Light", ScreenOrientation = ScreenOrientation.Landscape)]
 	public class MainActivity : ActionBarActivity, IDialogInterfaceOnClickListener
    {
       /// <summary>
@@ -139,7 +140,7 @@ relation node, relation way, relation relation
                //overlayItemArray.Add(new OverlayItem("Hi", "You're here", new GeoPoint(34.888039, -10.660)));
 
 
-               DefaultResourceProxyImpl defaultResourceProxyImpl = new DefaultResourceProxyImpl(this);
+               //DefaultResourceProxyImpl defaultResourceProxyImpl = new DefaultResourceProxyImpl(this);
                //ItemizedIconOverlay myItemizedIconOverlay = new ItemizedIconOverlay(overlayItemArray, null, defaultResourceProxyImpl);
                //_mapView.Overlays.Add(myItemizedIconOverlay);
 
@@ -152,26 +153,35 @@ relation node, relation way, relation relation
                _mapController.SetZoom(6);
                
                _mapController.SetCenter(_centreOfMap);
+               _geoPositionOverlay = new GeoPositionOverlay(this);
+               _geoPositionOverlay.GeoPointTapped += delegate (object sender, IGeoPoint point)
+               {
+                  List<OverlayItem> overlayItemArray = new List<OverlayItem>();
+                  OverlayItem olItem = new OverlayItem("Here", "SampleDescription", new GeoPoint(point.Latitude, point.Longitude));
+                  overlayItemArray.Add(olItem);
+                  olItem.SetMarker(Resources.GetDrawable(Resource.Drawable.cloud));
+
+                  DefaultResourceProxyImpl defaultResourceProxyImpl = new DefaultResourceProxyImpl(this);
+                  ItemizedIconOverlay myItemizedIconOverlay = new ItemizedIconOverlay(overlayItemArray, null, defaultResourceProxyImpl);
+                  _mapView.Overlays.Add(myItemizedIconOverlay);
+                  _mapView.Invalidate();
+               };
+               _mapView.Overlays.Add(_geoPositionOverlay);
 
                _geoService = new CouchDbGeoObjectsService();
-               
+
                //var firstPoint = ((GeoJSON.Net.Geometry.Point) points.Features[0].Geometry);
-               var firstPoint = new OsmSharp.Geo.Geometries.Point(new OsmSharp.Math.Geo.GeoCoordinate(33, -10));
+               //var firstPoint = new OsmSharp.Geo.Geometries.Point(new OsmSharp.Math.Geo.GeoCoordinate(33, -10));
                //double x = ((GeographicPosition) firstPoint.Coordinates).Latitude;
                //double y = ((GeographicPosition)firstPoint.Coordinates).Longitude;
                //List<OverlayItem> overlayItemArray = new List<OverlayItem>();
                //OverlayItem olItem = new OverlayItem("Here", "SampleDescription", new GeoPoint(x, y));
                //overlayItemArray.Add(olItem);
                //olItem.SetMarker(Resources.GetDrawable(Resource.Drawable.cloud));
-               
+
                //ItemizedIconOverlay newPoints = new ItemizedIconOverlay(overlayItemArray, null, defaultResourceProxyImpl);
                //_mapView.Overlays.Add(newPoints);
-               _geoPositionOverlay = new GeoPositionOverlay(this);
-               _geoPositionOverlay.GeoPointTapped += delegate(object sender, IGeoPoint point)
-               {
-                  Toast.MakeText(this, $"X {point.Latitude}, Y {point.Longitude}", ToastLength.Long).Show();
-               };
-               _mapView.Overlays.Add(_geoPositionOverlay);
+
             }
             else
             {
@@ -212,8 +222,7 @@ relation node, relation way, relation relation
          }
          catch (Exception exception)
          {
-            Toast.MakeText(this, exception.Message, ToastLength.Long).Show();
-            SetContentView(Resource.Layout.Main);
+            //Toast.MakeText(this, exception.Message, ToastLength.Long).Show();
          }
       }
 
@@ -254,63 +263,67 @@ relation node, relation way, relation relation
 	   //}
 	   public void OnClick(IDialogInterface dialog, int which)
 	   {
-	      for (int i = _mapView.Overlays.Count - 1; i >= 0; i--)
+	      try
 	      {
-	         _mapView.Overlays.RemoveAt(i);
-	      }
-         _mapView.Invalidate();
-	      switch (which)
-	      {
-            case 0:
+	         for (int i = _mapView.Overlays.Count - 1; i >= 0; i--)
 	         {
-               GeoPoint leftTopGeo = new GeoPoint(-1.686000, 33.558542);
-               GeoPoint rightBottomGeo = new GeoPoint(-11.409878, 42.633248);
-               Bitmap tanzania = BitmapFactory.DecodeResource(Resources, Resource.Drawable.tsetse_tanzania);
-	            Overlay newOverlay = new BitmapOverlay(this, leftTopGeo, rightBottomGeo, tanzania);
-	            _mapView.Overlays.Add(newOverlay);
+	            _mapView.Overlays.RemoveAt(i);
 	         }
-	         break;
-            case 1:
+	         _mapView.Invalidate();
+	         switch (which)
 	         {
-               GeoPoint leftTopGeo = new GeoPoint(39.301256, -20.008362);
-               GeoPoint rightBottomGeo = new GeoPoint(-37.787103, 51.759213);
-               Bitmap tanzania = BitmapFactory.DecodeResource(Resources, Resource.Drawable.green_africa);
-               Overlay newOverlay = new BitmapOverlay(this, leftTopGeo, rightBottomGeo, tanzania);
-               _mapView.Overlays.Add(newOverlay);
-            }
-               break;
-            case 2:
-	         {
-               var points = _geoService.GetRivers(null, 0);
-	            GeoPoint lastPoint = null;
-	            foreach (GeoJsonObject geoJsonObject in points)
+	            case 0:
 	            {
-                  PathOverlay newOverlay = new PathOverlay(Color.Blue, this);
-                  foreach (List<double> coordinate in geoJsonObject.geometry.coordinates)
+	               GeoPoint leftTopGeo = new GeoPoint(-1.686000, 33.558542);
+	               GeoPoint rightBottomGeo = new GeoPoint(-11.409878, 42.633248);
+	               Bitmap tanzania = BitmapFactory.DecodeResource(Resources, Resource.Drawable.tsetse_tanzania);
+	               Overlay newOverlay = new BitmapOverlay(this, leftTopGeo, rightBottomGeo, tanzania);
+	               _mapView.Overlays.Add(newOverlay);
+	            }
+	               break;
+	            case 1:
+	            {
+	               GeoPoint leftTopGeo = new GeoPoint(39.301256, -20.008362);
+	               GeoPoint rightBottomGeo = new GeoPoint(-37.787103, 51.759213);
+	               Bitmap tanzania = BitmapFactory.DecodeResource(Resources, Resource.Drawable.green_africa);
+	               Overlay newOverlay = new BitmapOverlay(this, leftTopGeo, rightBottomGeo, tanzania);
+	               _mapView.Overlays.Add(newOverlay);
+	            }
+	               break;
+	            case 2:
+	            {
+	               var points = _geoService.GetRivers(null, 0);
+	               GeoPoint lastPoint = null;
+	               foreach (GeoJsonObject geoJsonObject in points)
 	               {
-	                  var point = new GeoPoint(coordinate[0], coordinate[1]);
-                     newOverlay.AddPoint(point);
-	                  lastPoint = point;
+	                  PathOverlay newOverlay = new PathOverlay(Color.Blue, this);
+	                  foreach (List<double> coordinate in geoJsonObject.geometry.coordinates)
+	                  {
+	                     var point = new GeoPoint(coordinate[0], coordinate[1]);
+	                     newOverlay.AddPoint(point);
+	                     lastPoint = point;
+	                  }
+	                  _mapView.Overlays.Add(newOverlay);
 	               }
-                  _mapView.Overlays.Add(newOverlay);
-               }
-               _mapController.SetCenter(lastPoint);
-               
-               }
-	            break;
-            case 3:
-               {
-                  GeoPoint leftTopGeo = new GeoPoint(39.301256, -20.008362);
-                  GeoPoint rightBottomGeo = new GeoPoint(-37.787103, 51.759213);
-                  Bitmap tanzania = BitmapFactory.DecodeResource(Resources, Resource.Drawable.fire_africa);
-                  Overlay newOverlay = new BitmapOverlay(this, leftTopGeo, rightBottomGeo, tanzania);
-                  _mapView.Overlays.Add(newOverlay);
-               }
-               break;
-         }
+	               _mapController.SetCenter(lastPoint);
 
-
-         //54.259213
+	            }
+	               break;
+	            case 3:
+	            {
+	               GeoPoint leftTopGeo = new GeoPoint(39.301256, -20.008362);
+	               GeoPoint rightBottomGeo = new GeoPoint(-37.787103, 51.759213);
+	               Bitmap tanzania = BitmapFactory.DecodeResource(Resources, Resource.Drawable.fire_africa);
+	               Overlay newOverlay = new BitmapOverlay(this, leftTopGeo, rightBottomGeo, tanzania);
+	               _mapView.Overlays.Add(newOverlay);
+	            }
+	               break;
+	         }
+	      }
+	      catch (Exception e)
+	      {
+	         Toast.MakeText(this, "Service not available", ToastLength.Long).Show();
+	      }
       }
    }
 }
