@@ -1471,17 +1471,20 @@ namespace OsmTest.Android
 			// aapt resource value: 0x7f020054
 			public const int icon = 2130837588;
 			
-			// aapt resource value: 0x7f020058
-			public const int notification_template_icon_bg = 2130837592;
+			// aapt resource value: 0x7f020059
+			public const int notification_template_icon_bg = 2130837593;
 			
 			// aapt resource value: 0x7f020055
-			public const int tse_tse = 2130837589;
+			public const int sos = 2130837589;
 			
 			// aapt resource value: 0x7f020056
-			public const int tsetse_tanzania = 2130837590;
+			public const int tse_tse = 2130837590;
 			
 			// aapt resource value: 0x7f020057
-			public const int water = 2130837591;
+			public const int tsetse_tanzania = 2130837591;
+			
+			// aapt resource value: 0x7f020058
+			public const int water = 2130837592;
 			
 			static Drawable()
 			{
