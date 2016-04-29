@@ -21,7 +21,9 @@ using OsmSharp.IO.Xml.Sources;
 using OsmSharp.Osm;
 using OsmSharp.Osm.Xml;
 using OsmSharp.Osm.Xml.v0_6;
+using OsmTest.Core.Models;
 using Environment = Android.OS.Environment;
+using Point = OsmTest.Core.Models.Point;
 
 namespace OsmTest.Android.Services
 {
@@ -200,6 +202,28 @@ namespace OsmTest.Android.Services
          relation.Version = new ulong?(xml_relation.version);
          relation.Visible = new bool?(xml_relation.visible);
          return relation;
+      }
+
+      public async Task UploadPoint(double lat, double longitude)
+      {
+         Coordinates coordinates = new Coordinates()
+         {
+            CreationTime = DateTime.Now.ToString(),
+            CreatorId = "Dima",
+            CrowdsourcedPlaceType = 1,
+            Point = new Point()
+            {
+               coordinates = new List<double>() {lat, longitude},
+               type = 0,
+               crs = new Crs()
+               {
+
+               }
+            }
+         };
+         AzureService service = new AzureService();
+         await service.PostDataAsync<Coordinates>(
+            "http://52.169.147.3/swagger/ui/index.html#!/CrowdsourcedPlace/ApiCrowdsourcedPlacePost", coordinates);
       }
    }
 }

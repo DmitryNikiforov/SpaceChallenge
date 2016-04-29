@@ -154,7 +154,7 @@ relation node, relation way, relation relation
                
                _mapController.SetCenter(_centreOfMap);
                _geoPositionOverlay = new GeoPositionOverlay(this);
-               _geoPositionOverlay.GeoPointTapped += delegate (object sender, IGeoPoint point)
+               _geoPositionOverlay.GeoPointTapped += async delegate (object sender, IGeoPoint point)
                {
                   List<OverlayItem> overlayItemArray = new List<OverlayItem>();
                   OverlayItem olItem = new OverlayItem("Here", "SampleDescription", new GeoPoint(point.Latitude, point.Longitude));
@@ -165,6 +165,16 @@ relation node, relation way, relation relation
                   ItemizedIconOverlay myItemizedIconOverlay = new ItemizedIconOverlay(overlayItemArray, null, defaultResourceProxyImpl);
                   _mapView.Overlays.Add(myItemizedIconOverlay);
                   _mapView.Invalidate();
+
+                  try
+                  {
+                     OsmTest.Android.Services.ApiService service = new OsmTest.Android.Services.ApiService();
+                     await service.UploadPoint(point.Latitude, point.Longitude);
+                  }
+                  catch (Exception exception)
+                  {
+                     Toast.MakeText(this, exception.Message, ToastLength.Long).Show();
+                  }
                };
                _mapView.Overlays.Add(_geoPositionOverlay);
 

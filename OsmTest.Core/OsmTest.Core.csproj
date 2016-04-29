@@ -30,6 +30,7 @@
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Models\Coordinates.cs" />
     <Compile Include="Models\WeatherForecast.cs" />
     <Compile Include="Services\ApiService.cs" />
     <Compile Include="Services\CouchDbGeoObjectsService.cs" />

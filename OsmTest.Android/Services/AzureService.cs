@@ -19,6 +19,7 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using ModernHttpClient;
+using Newtonsoft.Json;
 using OsmSharp.Osm.Tiles;
 using Color = Android.Graphics.Color;
 
@@ -153,6 +154,47 @@ namespace OsmTest.Android.Services
             //   g.Clear(Color.LightGray);
             //}
             //return blankBitmap;
+         }
+      }
+
+      public async Task<R> PostDataAsync<R>(string url, object data, int timeout = 15000, bool ascii = true,
+         CancellationTokenSource token = null)
+      {
+         R result = default(R);
+         using (var request = GetRequest(url))
+         {
+            request.Timeout = TimeSpan.FromMilliseconds(timeout);
+            var message = await Task.Run(() =>
+            {
+               string jsonString = JsonConvert.SerializeObject(data);
+
+               return GetMessage(url, HttpMethod.Post, jsonString);
+            });
+
+            HttpResponseMessage response = null;
+            if (token != null)
+            {
+               response = await request.SendAsync(message, token.Token);
+            }
+            else
+            {
+               response = await request.SendAsync(message);
+            }
+            var res = await response.Content.ReadAsStringAsync();
+
+
+            if (!string.IsNullOrEmpty(res))
+            {
+               if (typeof (R) == typeof (string))
+               {
+                  result = ((R) (object) res);
+               }
+               else
+               {
+                  result = JsonConvert.DeserializeObject<R>(res);
+               }
+            }
+            return result;
          }
       }
    }
