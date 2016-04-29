@@ -40,6 +40,7 @@ namespace SpaceHerders.Services
         public async Task CreateCrowdsourcedPoint(CrowdsourcedPlace place)
         {
             place.PlaceId = Guid.NewGuid();
+            place.CreationTime = DateTime.UtcNow;
 
             var status = await _bucket.InsertAsync(place.PlaceId.ToString(), place).ConfigureAwait(false);
 

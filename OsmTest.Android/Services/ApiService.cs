@@ -208,17 +208,15 @@ namespace OsmTest.Android.Services
       {
          Coordinates coordinates = new Coordinates()
          {
-            CreationTime = DateTime.UtcNow.ToString(),
-            CreatorId = "3133C939-CA10-4F6F-9FEE-BB647AF50BF7",
+            CreatorId = Guid.Parse("3133C939-CA10-4F6F-9FEE-BB647AF50BF7"),
             CrowdsourcedPlaceType = 1,
             Point = new Point()
             {
-               coordinates = new List<double>() {lat, longitude},
-               type = 0
+               coordinates = new List<double> {lat, longitude},
             }
          };
          AzureService service = new AzureService();
-         await service.PostDataAsync<Coordinates>("http://52.169.147.3/CrowdsourcedPlace", coordinates);
+         await service.PostDataAsync<Coordinates>("http://52.169.147.3/api/CrowdsourcedPlace", coordinates);
       }
    }
 }

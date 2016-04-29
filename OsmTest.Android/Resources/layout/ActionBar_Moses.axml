@@ -10,7 +10,7 @@
         android:layout_marginLeft="20dp"
         android:gravity="center_vertical"
         android:background="@android:color/transparent"
-        android:text="Moses" />
+        android:text="Space Herders" />
     <RelativeLayout
         android:id="@+id/sos"
         android:layout_width="40dp"
