@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using SpaceHerders.Models;
@@ -21,12 +19,17 @@ namespace SpaceHerders.Web.Controllers
             _usersLocationService = usersLocationService;
         }
 
-        [HttpGet("{userId}")]
-        public async Task<IEnumerable<CrowdsourcedPlace>> Get(Guid userId)
+        [HttpGet]
+        public async Task<IEnumerable<CrowdsourcedPlace>> Get(
+            [FromQuery]double leftBottomX,
+            [FromQuery]double leftBottomY,
+            [FromQuery]double rightTopX,
+            [FromQuery]double rightTopY)
         {
-            //var lastPosition = await _usersLocationService.GetLastUserPosition(userId);
-            //return await _crowdsourcedPlacesService.GetClosePlaces(lastPosition, double.MaxValue);
-            return Enumerable.Empty<CrowdsourcedPlace>();
+            var leftBottom = new SimplePoint(leftBottomX, leftBottomY);
+            var rightTop = new SimplePoint(rightTopX, rightTopY);
+
+            return await _crowdsourcedPlacesService.GetClosePlaces(leftBottom, rightTop);
         }
 
         [HttpPost]

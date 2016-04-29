@@ -12,7 +12,7 @@ namespace SpaceHerders.Services
 {
     public interface ICrowdsourcedPlacesService
     {
-        Task<ICollection<CrowdsourcedPlace>> GetClosePlaces(GeographicPosition start, GeographicPosition end);
+        Task<ICollection<CrowdsourcedPlace>> GetClosePlaces(SimplePoint start, SimplePoint end);
 
         Task CreateCrowdsourcedPoint(CrowdsourcedPlace place);
     }
@@ -26,7 +26,7 @@ namespace SpaceHerders.Services
             _bucket = bucket;
         }
 
-        public async Task<ICollection<CrowdsourcedPlace>> GetClosePlaces(GeographicPosition start, GeographicPosition end)
+        public async Task<ICollection<CrowdsourcedPlace>> GetClosePlaces(SimplePoint start, SimplePoint end)
         {
             var query = new SpatialViewQuery().From("doc", "crowdsourcedpoints")
                 .Stale(StaleState.False)
