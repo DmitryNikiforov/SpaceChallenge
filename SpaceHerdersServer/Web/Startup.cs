@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNet.Builder;
+﻿using System;
+using System.Collections.Generic;
+using Couchbase;
+using Couchbase.Configuration.Client;
+using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Space_Herdsmans.Services;
+using SpaceHerders.Services;
 
-namespace Space_Herdsmans
+namespace SpaceHerders.Web
 {
     public class Startup
     {
@@ -26,8 +30,26 @@ namespace Space_Herdsmans
             // Add framework services.
             services.AddMvc();
             services.AddSwaggerGen();
-
             services.AddSingleton<IUsersLocationService, InMemoryUsersLocationService>();
+            services.AddTransient<ICrowdsourcedPlacesService, CouchbaseCrowdsourcedPlacesService>();
+
+            var config = new ClientConfiguration
+            {
+                Servers = new List<Uri> { new Uri("http://104.236.220.12:8091/pools") },
+                BucketConfigs = new Dictionary<string, BucketConfiguration>
+                {
+                    ["geodb"] = new BucketConfiguration
+                    {
+                        BucketName = "geodb", Password = "123456",
+                    }
+                }
+
+            };
+            var cluster = new Cluster(config);
+            var bucket = cluster.OpenBucket("geodb");
+            services.AddInstance(cluster);
+            services.AddInstance(bucket);
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

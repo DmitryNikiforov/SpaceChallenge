@@ -1,28 +1,29 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Space_Herdsmans.Models;
+using System.Threading.Tasks;
+using GeoJSON.Net.Geometry;
 
-namespace Space_Herdsmans.Services
+namespace SpaceHerders.Services
 {
     public class InMemoryUsersLocationService : IUsersLocationService
     {
-        private readonly IDictionary<Guid, GeoCoordinates> _data = new ConcurrentDictionary<Guid, GeoCoordinates>();
+        private readonly IDictionary<Guid, Point> _data = new ConcurrentDictionary<Guid, Point>();
  
-        public ICollection<GeoCoordinates> GetCloseUsers(GeoCoordinates point, double radius)
+        public async Task<ICollection<Point>> GetCloseUsers(Point point, double radius)
         {
             return _data.Values;
         }
 
-        public GeoCoordinates GetLastUserPosition(Guid userId)
+        public async Task<Point> GetLastUserPosition(Guid userId)
         {
-            GeoCoordinates coordinates;
+            Point coordinates;
             _data.TryGetValue(userId, out coordinates);
 
             return coordinates;
         }
 
-        public void UpdateUserPosition(Guid userId, GeoCoordinates point)
+        public async Task UpdateUserPosition(Guid userId, Point point)
         {
             _data[userId] = point;
         }

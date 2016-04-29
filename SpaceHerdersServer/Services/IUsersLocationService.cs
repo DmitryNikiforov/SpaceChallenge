@@ -1,15 +1,16 @@
 using System;
 using System.Collections.Generic;
-using Space_Herdsmans.Models;
+using System.Threading.Tasks;
+using GeoJSON.Net.Geometry;
 
-namespace Space_Herdsmans.Services
+namespace SpaceHerders.Services
 {
     public interface IUsersLocationService
     {
-        ICollection<GeoCoordinates> GetCloseUsers(GeoCoordinates point, double radius);
+        Task<ICollection<Point>> GetCloseUsers(Point point, double radius);
 
-        GeoCoordinates GetLastUserPosition(Guid userId);
+        Task<Point> GetLastUserPosition(Guid userId);
 
-        void UpdateUserPosition(Guid userId, GeoCoordinates point);
+        Task UpdateUserPosition(Guid userId, Point point);
     }
 }
