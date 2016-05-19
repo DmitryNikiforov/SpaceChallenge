@@ -1,7 +1,7 @@
 # SPACE HERDERS
 
 #### DOWNLOAD
-[SpaceHerders.apk](http://52.169.147.3/com.neuron.osmtest-Signed.apk)
+[SpaceHerders.apk](http://spaceherders.northeurope.cloudapp.azure.com/SpaceHerders.apk)
 
 #### EXPLANATION
 Everyday people in Africa die of hunger. While in Africa contains about 20% of the world livestock. But huge losses of livestock create a shortage of food.
