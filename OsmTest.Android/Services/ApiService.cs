@@ -216,7 +216,7 @@ namespace OsmTest.Android.Services
             }
          };
          AzureService service = new AzureService();
-         await service.PostDataAsync<Coordinates>("http://52.169.147.3/api/CrowdsourcedPlace", coordinates);
+         await service.PostDataAsync<Coordinates>("http://spaceherders.northeurope.cloudapp.azure.com/api/CrowdsourcedPlace", coordinates);
       }
    }
 }
